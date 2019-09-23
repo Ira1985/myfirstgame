@@ -1,11 +1,14 @@
 {
+    
+    "homepage": "https://ira1985.github.io/myfirstgame/",
   "name": "phaser-es6-boilerplate",
   "version": "1.0.2",
   "description": "Tiny flexible template for writing Phaser games in ES6/ES2015 with Babel.",
   "main": "src/index.js",
   "scripts": {
     "start": "gulp",
-    "production": "gulp --production"
+    "production": "gulp --production",
+    "deploy": "gh-pages -d build"
   },
   "repository": {
     "type": "git",
@@ -20,6 +23,7 @@
     "browserify": "^13.0.0",
     "del": "^2.2.0",
     "exorcist": "^0.4.0",
+    "gh-pages": "^2.1.1",
     "gulp": "^3.9.1",
     "gulp-buffer": "0.0.2",
     "gulp-if": "^2.0.0",
