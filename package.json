@@ -1,6 +1,5 @@
 {
-    
-    "homepage": "https://ira1985.github.io/myfirstgame/",
+  "homepage": "https://ira1985.github.io/myfirstgame/",
   "name": "phaser-es6-boilerplate",
   "version": "1.0.2",
   "description": "Tiny flexible template for writing Phaser games in ES6/ES2015 with Babel.",

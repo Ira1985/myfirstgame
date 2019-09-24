@@ -4,10 +4,10 @@ import Donats from 'objects/Donats';
 class GameState extends Phaser.State {
     preload() {
         const img = 'img/';
-        this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-        this.scale.pageAlignHorizontally = true;
-        this.scale.pageAlignVertically = true;
-        this.stage.backgroundColor = "#eee";
+        //this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        //this.scale.pageAlignHorizontally = true;
+        //this.scale.pageAlignVertically = true;
+        //this.stage.backgroundColor = "#eee";
         this.load.image('gem1', img+'gem-01.png');
         this.load.image('gem2', img+'gem-02.png');
         this.load.image('gem3', img+'gem-03.png');
@@ -20,7 +20,46 @@ class GameState extends Phaser.State {
     }
 
 	create() {
-        this.physics.startSystem(Phaser.Physics.ARCADE);
+		this.physics.startSystem(Phaser.Physics.ARCADE);
+		let back = this.add.sprite(0, 0, "background");
+		this.donat = this.add.sprite(60, 60, 'gem4');
+		this.physics.enable(this.donat, Phaser.Physics.ARCADE);
+		this.donat.scale.setTo(0.9, 0.9);
+		this.donat.inputEnabled = true;
+
+
+		let startPointX;
+		let startPointY;
+		let coordX;
+		let coordY;
+		this.donat.events.onInputDown.add((s, i) => {
+			startPointX = i.x;
+			startPointY = i.y;
+			coordX = this.donat.x;
+			coordY = this.donat.y;
+		});
+		this.input.addMoveCallback((pointer, x, y) => {
+			console.log(this.donat.x, coordX + this.donat.width);
+			if(Math.abs(startPointX - x) == this.donat.width/2) {
+				this.donat.body.gravity.x = 100;
+			} else if(Math.abs(startPointY - y) == this.donat.height/2) {
+				this.donat.body.gravity.y = -100;
+			}
+		});
+		/*this.donat.events.onDragUpdate.add(() => {
+			console.log(startPointX, startPointY, x, y);
+			if(Math.abs(startPointX - x) > Math.abs(startPointY - y)) {
+				console.log('aaaaaa');
+				this.donat.input.allowVerticalDrag = true;
+				this.donat.input.allowHorizontalDrag = false;
+
+			} else if(Math.abs(startPointX - x) < Math.abs(startPointY - y)) {
+				console.log('bbbbbb');
+				this.donat.input.allowVerticalDrag = false;
+				this.donat.input.allowHorizontalDrag = true;
+			}
+		});*/
+                /*this.physics.startSystem(Phaser.Physics.ARCADE);
         let back = this.add.sprite(62.5, 50, "background");
         back.scale.setTo(0.3,0.345);
         this.score = 0;
@@ -54,13 +93,14 @@ class GameState extends Phaser.State {
                     donats.moveDownAndCheckMatch(item, this, index, startPointX, startPointY);
                 }
             });
-        })
+        })*/
 	}
     update() {
-        this.physics.arcade.collide(this.donats, this.donats, function br(donat1, donat2) {
+        /*this.physics.arcade.collide(this.donats, this.donats, function br(donat1, donat2) {
             donat1.body.allowGravity = false;
             donat2.body.allowGravity = false;
-        });
+        });*/
+		this.score = this.input.x;
     }
 
 }
