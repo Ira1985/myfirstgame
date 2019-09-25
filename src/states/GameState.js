@@ -22,30 +22,70 @@ class GameState extends Phaser.State {
 	create() {
 		this.physics.startSystem(Phaser.Physics.ARCADE);
 		let back = this.add.sprite(0, 0, "background");
-		this.donat = this.add.sprite(60, 60, 'gem4');
+		this.donat = this.add.sprite(0, 0, 'gem4');
+		this.donat1 = this.add.sprite(180, 0, 'gem5');
+		this.donat2 = this.add.sprite(90, 0, 'gem1');
 		this.physics.enable(this.donat, Phaser.Physics.ARCADE);
+		this.physics.enable(this.donat1, Phaser.Physics.ARCADE);
+		this.physics.enable(this.donat2, Phaser.Physics.ARCADE);
+		this.donat.body.collideWorldBounds = true;
+		this.donat2.body.collideWorldBounds = true;
 		this.donat.scale.setTo(0.9, 0.9);
+		this.donat1.scale.setTo(0.9, 0.9);
+		this.donat2.scale.setTo(0.9, 0.9);
 		this.donat.inputEnabled = true;
 
 
-		let startPointX;
-		let startPointY;
+		this.startPointX;
+		this.startPointY;
 		let coordX;
 		let coordY;
 		this.donat.events.onInputDown.add((s, i) => {
-			startPointX = i.x;
-			startPointY = i.y;
+			//console.log(this.donat);
+			this.physics.enable(this.donat, Phaser.Physics.ARCADE);
+			this.startPointX = i.x;
+			this.startPointY = i.y;
 			coordX = this.donat.x;
 			coordY = this.donat.y;
+			this.input.addMoveCallback((pointer, x, y) => {
+				console.log(this.startPointX - x, this.startPointX, x);
+				if(Math.abs(this.startPointX - x) == this.donat.width/2) {
+					if(this.startPointX - x > 0) {
+						//this.donat.body.gravity.x = -100;
+						this.donat.body.velocity.set(-100, 0);
+						//this.donat.body.gravity.y = 100;
+						//this.donat.body.moveTo(100, 90, 180);
+						//this.physics.arcade.moveToXY(this.donat, this.donat.x + 1, this.donat.y, 100, 500);
+					}
+					if(this.startPointX - x < 0) {
+						this.donat.body.velocity.set(100, 0);
+						this.donat2.body.velocity.set(-100, 0);
+						//this.donat.body.gravity.y = 0;
+						//this.donat.body.moveTo(100, 90, 360);
+					}
+				} else if(Math.abs(this.startPointY - y) == this.donat.height/2) {
+					if(this.startPointY - y > 0) {
+						//this.donat.body.gravity.y = -100;
+						this.donat.body.velocity.set(0, -100);
+						//this.donat.body.moveTo(0, 90, 0);
+					}
+					if(this.startPointY - y < 0) {
+						//this.donat.body.gravity.y = 100;
+						this.donat.body.velocity.set(0, 100);
+						//this.donat.body.moveTo(0, 90, 90);
+					}
+				}
+				if(this.donat.x > coordX + this.donat.width || this.donat.y > coordY + this.donat.width) {
+					//console.log('aaaaaaa');
+					this.donat.body.velocity.set(0, 0);
+					//this.donat.body.allowGravity = false;
+					//this.donat.body.mass = 0;
+					//console.log(this.donat.x);
+				}
+			});
+			this.donat1.body.immovable = true;
 		});
-		this.input.addMoveCallback((pointer, x, y) => {
-			console.log(this.donat.x, coordX + this.donat.width);
-			if(Math.abs(startPointX - x) == this.donat.width/2) {
-				this.donat.body.gravity.x = 100;
-			} else if(Math.abs(startPointY - y) == this.donat.height/2) {
-				this.donat.body.gravity.y = -100;
-			}
-		});
+
 		/*this.donat.events.onDragUpdate.add(() => {
 			console.log(startPointX, startPointY, x, y);
 			if(Math.abs(startPointX - x) > Math.abs(startPointY - y)) {
@@ -96,11 +136,12 @@ class GameState extends Phaser.State {
         })*/
 	}
     update() {
-        /*this.physics.arcade.collide(this.donats, this.donats, function br(donat1, donat2) {
-            donat1.body.allowGravity = false;
-            donat2.body.allowGravity = false;
-        });*/
-		this.score = this.input.x;
+        this.physics.arcade.collide(this.donat, this.donat1, function br(donat1, donat2) {
+			donat1.body.allowGravity = false;
+			this.startPointX = undefined;
+			this.startPointY = undefined;
+        });
+
     }
 
 }

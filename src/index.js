@@ -7,11 +7,15 @@ class Game extends Phaser.Game {
 		this.state.add('GameState', GameState, false);
 		this.state.start('GameState');
         this.donat;
+		this.donat1;
+		this.donat2;
         this.newDonat;
         this.donatInfo;
         this.timer;
         this.scoreText;
         this.score;
+		this.startPointX;
+		this.startPointY;
 	}
 
 }
