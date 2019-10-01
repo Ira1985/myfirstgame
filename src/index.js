@@ -16,6 +16,7 @@ class Game extends Phaser.Game {
         this.score;
 		this.startPointX;
 		this.startPointY;
+		this.donats;
 	}
 
 }
