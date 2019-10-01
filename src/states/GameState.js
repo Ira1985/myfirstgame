@@ -39,6 +39,7 @@ class GameState extends Phaser.State {
 			let coordY;
 
 			item.events.onInputDown.add((s, i) => {
+			    console.log(item.key, index, item.x, item.y, this.donats.children[index + 11].key, this.donats.children[index + 11].x, this.donats.children[index + 11].y);
 				this.startPointX = i.x;
 				this.startPointY = i.y;
 				coordX = item.x;
@@ -54,6 +55,7 @@ class GameState extends Phaser.State {
 							//this.donats.children[index - 11].body.velocity.set(100, 0);
 							//let t = this.add.tween(item).to( { alpha: -1}, 2000, "Linear", true, 0, 1);
 							this.add.tween(item).to( { x: '-98.5'}, 1000, Phaser.Easing.Linear.None, true);
+                            this.add.tween(this.donats.children[index - 11]).to( { x: '+98.5'}, 1000, Phaser.Easing.Linear.None, true);
                             this.input.moveCallbacks = [];
 							//t.yoyo(true, 3000);
 						}
@@ -62,6 +64,11 @@ class GameState extends Phaser.State {
 							//this.donats.children[index + 11].body.velocity.set(-100, 0);
 							//this.add.tween(item).to( { x: item.x + item.width}, 4000, Phaser.Easing.Bounce.Out, true);
                             this.add.tween(item).to( { x: '+98.5'}, 1000, Phaser.Easing.Linear.None, true);
+                            this.add.tween(this.donats.children[index + 11]).to( { x: '-98.5'}, 1000, Phaser.Easing.Linear.None, true);
+                            //let d = this.donats.children[index + 11];
+                            //this.donats.children[index + 11] = item;
+                            //item = d;
+                            //item.x = donats.children[index + 11].x;
                             this.input.moveCallbacks = [];
 						}
 					} else if(Math.abs(this.startPointY - y) == this.donat.height/2) {
@@ -70,6 +77,7 @@ class GameState extends Phaser.State {
 							//this.donats.children[index - 1].body.velocity.set(0, 100);
 							//this.add.tween(item).to( { y: item.y - item.height}, 4000, Phaser.Easing.Bounce.Out, true);
                             this.add.tween(item).to( { y: '-87.3'}, 1000, Phaser.Easing.Linear.None, true);
+                            this.add.tween(this.donats.children[index - 1]).to( { y: '+87.3'}, 1000, Phaser.Easing.Linear.None, true);
                             this.input.moveCallbacks = [];
 						}
 						if(this.startPointY - y < 0) {
@@ -77,6 +85,7 @@ class GameState extends Phaser.State {
 							//this.donats.children[index + 1].body.velocity.set(0, -100);
 							//this.add.tween(item).to( { y: item.y + item.height}, 4000, Phaser.Easing.Bounce.Out, true);
                             this.add.tween(item).to( { y: '+87.3'}, 1000, Phaser.Easing.Linear.None, true);
+                            this.add.tween(this.donats.children[index + 1]).to( { y: '-87.3'}, 1000, Phaser.Easing.Linear.None, true);
                             this.input.moveCallbacks = [];
 						}
 					}
