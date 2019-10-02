@@ -92,7 +92,6 @@ class GameState extends Phaser.State {
                             this.input.moveCallbacks = [];
 							//console.log(this.donats.getIndex(item));
 							//this.donats.setChildIndex(item, index + 1);
-							//console.log(this.donats.getIndex(item));
 						}
 					} else if(Math.abs(this.startPointY - y) == this.donat.height/2) {
 						if(this.startPointY - y > 0) {
