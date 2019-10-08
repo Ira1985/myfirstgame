@@ -109,13 +109,13 @@ class GameState extends Phaser.State {
 				});
 			});
             item.events.onInputUp.add(() => {
-				this.donats.children.forEach((item, index) => {
-					console.log(index, item.key);
-				});
+				//this.donats.children.forEach((item, index) => {
+					//console.log(index, item.key);
+				///);
                 let first;
                 let count = 0;
                 let arr = [];
-                for(let i = 0; i < this.donats.length; i++) {
+                /*for(let i = 0; i < this.donats.length; i++) {
                     if(i%13 == 0 || first.key != this.donats.getAt(i).key) {
                         first = this.donats.getAt(i);
                         if(count > 1) {
@@ -131,12 +131,12 @@ class GameState extends Phaser.State {
                                     this.add.tween(item1).from( { y: '-200'}, 1000, Phaser.Easing.Bounce.Out, true);
                                     this.donats.swap(this.donats.getAt(item), next);
                                     item -= 13;
-                                    this.input.moveCallbacks = [];
                                 }
                                 this.donats.getAt(item).loadTexture('gem' + this.rnd.integerInRange(1, 7));
                                 this.donats.getAt(item).visible = true;
-                                this.input.moveCallbacks = [];
+
                             });
+							this.input.moveCallbacks = [];
                             return true;
                         }
                         count = 0;
@@ -147,7 +147,44 @@ class GameState extends Phaser.State {
                         count++;
                         arr.push(i);
                     }
-                }
+                }*/
+                let first1;
+                let arr1 = [];
+                for(let i = 0; i < 13; i++) {
+                	first1 = this.donats.getAt(i);
+                	let j = i + 13;
+                	arr1.push(i);
+                	while(j < this.donats.length) {
+						if(first1.key == this.donats.getAt(j).key) {
+							arr1.push(j);
+							if(arr1.length > 2) {
+								let it = arr1[0] - 13;
+								console.log(arr1);
+								arr1.forEach(item => {
+									this.donats.getAt(item).kill();
+								})
+								while(it > 0){
+									arr1.forEach(item => {
+										//let str = '+' + 87.3 * arr1.length;
+										//this.add.tween(this.donats.getAt(it)).to( { y: '+' + 87.3 * arr1.length}, 1000, Phaser.Easing.Linear.None, true);
+										//console.log(this.donats.getAt(it).key, this.donats.getAt(item).key);
+										//this.donats.swap(this.donats.getAt(item), this.donats.getAt(it));
+										console.log(it, item, i);
+									})
+									it -= 13;
+								}
+								//this.input.moveCallbacks = [];
+								//return true;
+							}
+						} else {
+							first1 = this.donats.getAt(j);
+							arr1 = [];
+							arr1.push(j);
+						}
+						j += 13;
+					}
+					arr1 = [];
+				}
 				this.input.moveCallbacks = [];
 			});
 
