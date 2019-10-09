@@ -109,9 +109,9 @@ class GameState extends Phaser.State {
 				});
 			});
             item.events.onInputUp.add(() => {
-				//this.donats.children.forEach((item, index) => {
-					//console.log(index, item.key);
-				///);
+				this.donats.children.forEach((item, index) => {
+					console.log(index, item.key);
+				});
                 let first;
                 let count = 0;
                 let arr = [];
@@ -154,29 +154,32 @@ class GameState extends Phaser.State {
                 	first1 = this.donats.getAt(i);
                 	let j = i + 13;
                 	arr1.push(i);
-                	while(j < this.donats.length) {
+                	while(j < this.donats.length + 13) {
 						if(first1.key == this.donats.getAt(j).key) {
 							arr1.push(j);
+						} else {
 							if(arr1.length > 2) {
 								let it = arr1[0] - 13;
+								let it1 = arr1[arr1.length - 1];
 								console.log(arr1);
-								arr1.forEach(item => {
-									this.donats.getAt(item).kill();
+								arr1.forEach((item, index) => {
+									let don = this.donats.getAt(item).kill();
+									don.loadTexture('gem' + this.rnd.integerInRange(1, 7));
+									don.visible = true;
+									don.x = this.donats.getAt(item).x;
+									don.y = 0 + index*87.3;
+									this.add.tween(item).from( { y: '-200'}, 1000, Phaser.Easing.Bounce.Out, true);
 								})
 								while(it > 0){
-									arr1.forEach(item => {
-										//let str = '+' + 87.3 * arr1.length;
-										//this.add.tween(this.donats.getAt(it)).to( { y: '+' + 87.3 * arr1.length}, 1000, Phaser.Easing.Linear.None, true);
-										//console.log(this.donats.getAt(it).key, this.donats.getAt(item).key);
-										//this.donats.swap(this.donats.getAt(item), this.donats.getAt(it));
-										console.log(it, item, i);
-									})
+									this.add.tween(this.donats.getAt(it)).to( { y: '+' + 87.3 * arr1.length}, 1000, Phaser.Easing.Linear.None, true);
+									this.donats.swap(this.donats.getAt(it), this.donats.getAt(it1));
+									console.log(it, it1);
 									it -= 13;
+									it1 -= 13
 								}
 								//this.input.moveCallbacks = [];
 								//return true;
 							}
-						} else {
 							first1 = this.donats.getAt(j);
 							arr1 = [];
 							arr1.push(j);
