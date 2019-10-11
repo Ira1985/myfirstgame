@@ -161,7 +161,6 @@ class GameState extends Phaser.State {
 						} else {
 							if(arr1.length > 2) {
 								let it = arr1[0] - 13;
-								let it1 = arr1[arr1.length - 1];
 								console.log(arr1);
 								arr1.forEach((item, index) => {
 									let don = this.donats.getAt(item).kill();
@@ -173,11 +172,13 @@ class GameState extends Phaser.State {
 								})
 								while(it > 0){
 									this.add.tween(this.donats.getAt(it)).to( { y: '+' + 87.3 * arr1.length}, 1000, Phaser.Easing.Linear.None, true);
+									arr1.forEach((item, index) => {
+										//this.donats.swap(this.donats.getAt(it), this.donats.getAt(item));
+										//arr1.splice(index, 1, item-13);
+									})
 									//this.donats.swap(this.donats.getAt(it), this.donats.getAt(it1));
 									it -= 13;
-									it1 -= 13;
 								}
-								console.log(it, it1);
 								//this.input.moveCallbacks = [];
 								//return true;
 							}
