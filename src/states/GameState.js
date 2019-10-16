@@ -367,10 +367,11 @@ deleteArr(arr1, a) {
 		don.x = this.donats.getAt(item).x;
 		don.y = 0 + index * 87.3;
 		this.add.tween(don).from( { y: '-200'}, 1000, Phaser.Easing.Bounce.Out, true);
-	})
+	});
+	this.timer.destroy();
 	while (it > 0) {
-		console.log(arr1.length);
-		let str = 98.5 * (arr1.length - 1) +  98.5 * arr1.length;
+		console.log(it);
+		let str = 87.3 * arr1.length;
 		this.add.tween(a.getAt(it)).to({y: '+' + str}, 1000, Phaser.Easing.Linear.None, true);
 		arr1.forEach((item, index) => {
 			a.swap(a.getAt(it + 13 * index), a.getAt(item));
