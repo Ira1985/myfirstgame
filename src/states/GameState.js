@@ -266,9 +266,10 @@ class GameState extends Phaser.State {
 				this.startPointX = undefined;
 				this.startPointY = undefined;
 			});
-			let result = this.move3(this.donats);
 
-			this.timer.add(1000, this.deleteArr, this, this.move3(this.donats), this.donats);
+			//this.timer.add(1000, this.deleteArr, this, this.move3(this.donats), this.donats);
+			//this.timer.start();
+			this.timer.add(1000, this.deleteArr1, this, this.move4(this.donats), this.donats);
 			this.timer.start();
 			//let timer = this.time.create(false);
 			//timer.add(1000, this.deleteArr, this, this.move3(this.donats), this.donats);
@@ -287,23 +288,6 @@ move1(a, item, index) {
 
 	}
 	if(a < 0) {
-		//item.body.velocity.set(100, 0);
-		//this.donats.children[index + 11].body.velocity.set(-100, 0);
-		//this.add.tween(item).to( { x: item.x + item.width}, 4000, Phaser.Easing.Bounce.Out, true);
-		//let d = this.donats.children[index + 11];
-		//this.donats.children[index + 11] = this.donats.children[index];
-		//this.donats.children[index] = d;
-		//this.donats.swap(this.donats.children[index + 11], item);
-		//this.donats.updateZ();
-		//this.donats.replace(this.donats.getAt(index), donat2);
-		//this.donats.add(donat1, null, index + 1);
-		//this.donats.update();
-		//this.donats.reverse();
-		//this.donats.replace(this.donats.children[index + 11], donat1);
-		//item = d;
-		//item.x = donats.children[index + 11].x;
-		//console.log(this.donats.getIndex(item));
-		//this.donats.setChildIndex(item, index + 1);
 		this.add.tween(this.donats.getAt(index)).to( { x: '+98.5'}, 1000, Phaser.Easing.Linear.None, true);
 		this.add.tween(this.donats.getAt(index + 1)).to( { x: '-98.5'}, 1000, Phaser.Easing.Linear.None, true);
 		let donat1 = this.donats.getAt(index);
@@ -385,6 +369,50 @@ deleteArr(arr1, a) {
 		this.timer.destroy();
 		this.count = 0;
 	}
+}
+move4(a) {
+	let first;
+	let count = 0;
+	let arr = [];
+	for(let i = 0; i < a.length; i++) {
+		if(i%13 == 0 || first.key != a.getAt(i).key) {
+			first = a.getAt(i);
+			if(count > 1) {
+				return arr;
+			}
+			count = 0;
+			arr = [];
+			arr.push(i);
+			continue;
+		} else {
+			count++;
+			arr.push(i);
+		}
+	}
+	return arr;
+}
+deleteArr1(arr, a) {
+	arr.forEach(item => {
+		a.getAt(item).kill();
+		/*while(item > 12) {
+			let next =a.getAt(item - 13);
+			this.add.tween(a.getAt(item - 13)).to( { y: '+87.3'}, 1000, Phaser.Easing.Linear.None, true);
+			let item1 = a.getAt(item);
+			item1.x = a.getAt(item).x;
+			item1.y = 0;
+			this.add.tween(item1).from( { y: '-200'}, 1000, Phaser.Easing.Bounce.Out, true);
+			a.swap(a.getAt(item), next);
+			item -= 13;
+		}*/
+		if(arr.length < 3) {
+			this.timer.destroy();
+			console.log("aaaaa");
+		}
+		a.getAt(item).loadTexture('gem' + this.rnd.integerInRange(1, 7));
+		a.getAt(item).visible = true;
+		this.timer.destroy();
+	});
+	this.input.moveCallbacks = [];
 }
 
 }
