@@ -46,6 +46,7 @@ class GameState extends Phaser.State {
 
 		this.timer = this.time.create(false);
 		this.count = 0;
+		this.timer1 = this.time.create(false);
 
 		this.donats.children.forEach((item, index) => {
 
@@ -266,11 +267,10 @@ class GameState extends Phaser.State {
 				this.startPointX = undefined;
 				this.startPointY = undefined;
 			});
-
-			//this.timer.add(1000, this.deleteArr, this, this.move3(this.donats), this.donats);
-			//this.timer.start();
-			this.timer.add(1000, this.deleteArr1, this, this.move4(this.donats), this.donats);
+			this.timer.add(1000, this.deleteArr, this, this.move3(this.donats), this.move4(this.donats), this.donats);
 			this.timer.start();
+			//this.timer.add(1000, this.deleteArr1, this, this.move4(this.donats), this.donats);
+			//this.timer.start();
 			//let timer = this.time.create(false);
 			//timer.add(1000, this.deleteArr, this, this.move3(this.donats), this.donats);
 			//timer.start();
@@ -342,7 +342,8 @@ move3(a) {
 	}
 	return arr1;
 }
-deleteArr(arr1, a) {
+deleteArr(arr1, arr, a) {
+	console.log(arr1, arr);
 	let it = arr1[0] - 13;
 	arr1.forEach((item, index) => {
 		let don = a.getAt(item).kill();
@@ -392,9 +393,12 @@ move4(a) {
 	return arr;
 }
 deleteArr1(arr, a) {
+	if(arr.length < 3) {
+		arr = [];
+	}
 	arr.forEach(item => {
 		a.getAt(item).kill();
-		/*while(item > 12) {
+		while(item > 12) {
 			let next =a.getAt(item - 13);
 			this.add.tween(a.getAt(item - 13)).to( { y: '+87.3'}, 1000, Phaser.Easing.Linear.None, true);
 			let item1 = a.getAt(item);
@@ -403,16 +407,13 @@ deleteArr1(arr, a) {
 			this.add.tween(item1).from( { y: '-200'}, 1000, Phaser.Easing.Bounce.Out, true);
 			a.swap(a.getAt(item), next);
 			item -= 13;
-		}*/
-		if(arr.length < 3) {
-			this.timer.destroy();
-			console.log("aaaaa");
 		}
+
 		a.getAt(item).loadTexture('gem' + this.rnd.integerInRange(1, 7));
 		a.getAt(item).visible = true;
 		this.timer.destroy();
 	});
-	this.input.moveCallbacks = [];
+	//this.input.moveCallbacks = [];
 }
 
 }

@@ -19,6 +19,7 @@ class Game extends Phaser.Game {
 		this.donats;
 		this.timer;
 		this.count;
+		this.timer1;
 	}
 
 }
