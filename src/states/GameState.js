@@ -278,7 +278,6 @@ class GameState extends Phaser.State {
 				this.timer.start();
 			}*/
 			if(this.move3(this.donats).length != 0 && this.move4(this.donats).length > 2) {
-				console.log("aaaaaaa", this.move3(this.donats), this.move4(this.donats));
 				this.timer.add(1000, this.deleteArr, this, [], this.move4(this.donats), this.donats);
 				this.timer.start();
 			}
