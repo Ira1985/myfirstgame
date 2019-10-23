@@ -777,6 +777,21 @@ var GameState = function (_Phaser$State) {
 					this.startPointX = undefined;
 					this.startPointY = undefined;
 				});
+				/*this.timer.add(1000, this.deleteArr, this, this.move3(this.donats), this.move4(this.donats), this.donats);
+    if(this.move3(this.donats).length != 0) {
+    	this.timer.add(1000, this.deleteArr, this, this.move3(this.donats), null, this.donats);
+    	console.log('this.move3', this.move3(this.donats));
+    	this.timer.start();
+    } else if ((this.move4(this.donats).length > 2)) {
+    	this.timer.add(1000, this.deleteArr, this, null, this.move4(this.donats), this.donats);
+    	console.log('this.move4', this.move4(this.donats));
+    	this.timer.start();
+    }*/
+				if (_this3.move3(_this3.donats).length != 0 && _this3.move4(_this3.donats).length > 2) {
+					console.log("aaaaaaa", _this3.move3(_this3.donats), _this3.move4(_this3.donats));
+					_this3.timer.add(1000, _this3.deleteArr, _this3, [], _this3.move4(_this3.donats), _this3.donats);
+					_this3.timer.start();
+				}
 				_this3.timer.add(1000, _this3.deleteArr, _this3, _this3.move3(_this3.donats), _this3.move4(_this3.donats), _this3.donats);
 				_this3.timer.start();
 				//this.timer.add(1000, this.deleteArr1, this, this.move4(this.donats), this.donats);
@@ -930,33 +945,30 @@ var GameState = function (_Phaser$State) {
 			}
 			return arr;
 		}
-	}, {
-		key: 'deleteArr1',
-		value: function deleteArr1(arr, a) {
-			var _this5 = this;
+		/*deleteArr1(arr, a) {
+  	if(arr.length < 3) {
+  		arr = [];
+  	}
+  	arr.forEach(item => {
+  		a.getAt(item).kill();
+  		while(item > 12) {
+  			let next =a.getAt(item - 13);
+  			this.add.tween(a.getAt(item - 13)).to( { y: '+87.3'}, 1000, Phaser.Easing.Linear.None, true);
+  			let item1 = a.getAt(item);
+  			item1.x = a.getAt(item).x;
+  			item1.y = 0;
+  			this.add.tween(item1).from( { y: '-200'}, 1000, Phaser.Easing.Bounce.Out, true);
+  			a.swap(a.getAt(item), next);
+  			item -= 13;
+  		}
+  
+  		a.getAt(item).loadTexture('gem' + this.rnd.integerInRange(1, 7));
+  		a.getAt(item).visible = true;
+  		this.timer.destroy();
+  	});
+  	//this.input.moveCallbacks = [];
+  }*/
 
-			if (arr.length < 3) {
-				arr = [];
-			}
-			arr.forEach(function (item) {
-				a.getAt(item).kill();
-				while (item > 12) {
-					var next = a.getAt(item - 13);
-					_this5.add.tween(a.getAt(item - 13)).to({ y: '+87.3' }, 1000, Phaser.Easing.Linear.None, true);
-					var item1 = a.getAt(item);
-					item1.x = a.getAt(item).x;
-					item1.y = 0;
-					_this5.add.tween(item1).from({ y: '-200' }, 1000, Phaser.Easing.Bounce.Out, true);
-					a.swap(a.getAt(item), next);
-					item -= 13;
-				}
-
-				a.getAt(item).loadTexture('gem' + _this5.rnd.integerInRange(1, 7));
-				a.getAt(item).visible = true;
-				_this5.timer.destroy();
-			});
-			//this.input.moveCallbacks = [];
-		}
 	}]);
 
 	return GameState;
