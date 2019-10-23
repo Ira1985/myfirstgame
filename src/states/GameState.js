@@ -267,6 +267,21 @@ class GameState extends Phaser.State {
 				this.startPointX = undefined;
 				this.startPointY = undefined;
 			});
+			/*this.timer.add(1000, this.deleteArr, this, this.move3(this.donats), this.move4(this.donats), this.donats);
+			if(this.move3(this.donats).length != 0) {
+				this.timer.add(1000, this.deleteArr, this, this.move3(this.donats), null, this.donats);
+				console.log('this.move3', this.move3(this.donats));
+				this.timer.start();
+			} else if ((this.move4(this.donats).length > 2)) {
+				this.timer.add(1000, this.deleteArr, this, null, this.move4(this.donats), this.donats);
+				console.log('this.move4', this.move4(this.donats));
+				this.timer.start();
+			}*/
+			if(this.move3(this.donats).length != 0 && this.move4(this.donats).length > 2) {
+				console.log("aaaaaaa", this.move3(this.donats), this.move4(this.donats));
+				this.timer.add(1000, this.deleteArr, this, [], this.move4(this.donats), this.donats);
+				this.timer.start();
+			}
 			this.timer.add(1000, this.deleteArr, this, this.move3(this.donats), this.move4(this.donats), this.donats);
 			this.timer.start();
 			//this.timer.add(1000, this.deleteArr1, this, this.move4(this.donats), this.donats);
@@ -370,6 +385,27 @@ deleteArr(arr1, arr, a) {
 		this.timer.destroy();
 		this.count = 0;
 	}
+
+	if(arr.length < 3) {
+		arr = [];
+	}
+	arr.forEach(item => {
+		a.getAt(item).kill();
+		while(item > 12) {
+			let next =a.getAt(item - 13);
+			this.add.tween(a.getAt(item - 13)).to( { y: '+87.3'}, 1000, Phaser.Easing.Linear.None, true);
+			let item1 = a.getAt(item);
+			item1.x = a.getAt(item).x;
+			item1.y = 0;
+			this.add.tween(item1).from( { y: '-200'}, 1000, Phaser.Easing.Bounce.Out, true);
+			a.swap(a.getAt(item), next);
+			item -= 13;
+		}
+
+		a.getAt(item).loadTexture('gem' + this.rnd.integerInRange(1, 7));
+		a.getAt(item).visible = true;
+		this.timer.destroy();
+	});
 }
 move4(a) {
 	let first;
@@ -392,7 +428,7 @@ move4(a) {
 	}
 	return arr;
 }
-deleteArr1(arr, a) {
+/*deleteArr1(arr, a) {
 	if(arr.length < 3) {
 		arr = [];
 	}
@@ -414,7 +450,7 @@ deleteArr1(arr, a) {
 		this.timer.destroy();
 	});
 	//this.input.moveCallbacks = [];
-}
+}*/
 
 }
 
