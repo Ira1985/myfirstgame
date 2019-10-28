@@ -111,7 +111,7 @@ class GameState extends Phaser.State {
 						}*/
 						this.move2(this.startPointY - y, item, index);
 					}
-					console.log("addMoveCallback");
+					//console.log("addMoveCallback");
 				});
 				//let timer = this.time.create(false);
 				//let s1 = timer.loop(2000, this.move3, this, this.donats);
@@ -126,9 +126,9 @@ class GameState extends Phaser.State {
 				//this.donats.children.forEach((item, index) => {
 					//console.log(index, item.key);
 				//});
-				let first;
-				let count = 0;
-				let arr = [];
+				//let first;
+				//let count = 0;
+				//let arr = [];
                /* for(let i = 0; i < this.donats.length; i++) {
                     if(i%13 == 0 || first.key != this.donats.getAt(i).key) {
                         first = this.donats.getAt(i);
@@ -162,8 +162,8 @@ class GameState extends Phaser.State {
                         arr.push(i);
                     }
                 }*/
-                let first1;
-                let arr1 = [];
+                //let first1;
+                //let arr1 = [];
                 /*for(let i = 0; i < 13; i++) {
                 	first1 = this.donats.getAt(i);
                 	let j = i + 13;
@@ -330,6 +330,7 @@ move2(a, item, index) {
 		this.input.moveCallbacks = [];
 
 	}
+
 }
 move3(a) {
 	let first1;
@@ -357,7 +358,7 @@ move3(a) {
 	return arr1;
 }
 deleteArr(arr1, arr, a) {
-	console.log(arr1, arr);
+	//console.log(arr1, arr);
 	let it = arr1[0] - 13;
 	arr1.forEach((item, index) => {
 		let don = a.getAt(item).kill();
@@ -368,8 +369,8 @@ deleteArr(arr1, arr, a) {
 		this.add.tween(don).from( { y: '-200'}, 1000, Phaser.Easing.Bounce.Out, true);
 	});
 	this.timer.destroy();
-	while (it > 0) {
-		console.log(it);
+	while (it >= 0) {
+		console.log("it" + it);
 		let str = 87.3 * arr1.length;
 		this.add.tween(a.getAt(it)).to({y: '+' + str}, 1000, Phaser.Easing.Linear.None, true);
 		arr1.forEach((item, index) => {
