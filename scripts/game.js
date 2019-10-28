@@ -625,7 +625,7 @@ var GameState = function (_Phaser$State) {
        }*/
 							_this2.move2(_this2.startPointY - y, item, index);
 						}
-						console.log("addMoveCallback");
+						//console.log("addMoveCallback");
 					});
 					//let timer = this.time.create(false);
 					//let s1 = timer.loop(2000, this.move3, this, this.donats);
@@ -640,9 +640,9 @@ var GameState = function (_Phaser$State) {
 					//this.donats.children.forEach((item, index) => {
 					//console.log(index, item.key);
 					//});
-					var first = void 0;
-					var count = 0;
-					var arr = [];
+					//let first;
+					//let count = 0;
+					//let arr = [];
 					/* for(let i = 0; i < this.donats.length; i++) {
           if(i%13 == 0 || first.key != this.donats.getAt(i).key) {
               first = this.donats.getAt(i);
@@ -675,8 +675,8 @@ var GameState = function (_Phaser$State) {
               arr.push(i);
           }
       }*/
-					var first1 = void 0;
-					var arr1 = [];
+					//let first1;
+					//let arr1 = [];
 					/*for(let i = 0; i < 13; i++) {
      	first1 = this.donats.getAt(i);
      	let j = i + 13;
@@ -788,7 +788,6 @@ var GameState = function (_Phaser$State) {
     	this.timer.start();
     }*/
 				if (_this3.move3(_this3.donats).length != 0 && _this3.move4(_this3.donats).length > 2) {
-					console.log("aaaaaaa", _this3.move3(_this3.donats), _this3.move4(_this3.donats));
 					_this3.timer.add(1000, _this3.deleteArr, _this3, [], _this3.move4(_this3.donats), _this3.donats);
 					_this3.timer.start();
 				}
@@ -873,7 +872,7 @@ var GameState = function (_Phaser$State) {
 		value: function deleteArr(arr1, arr, a) {
 			var _this4 = this;
 
-			console.log(arr1, arr);
+			//console.log(arr1, arr);
 			var it = arr1[0] - 13;
 			arr1.forEach(function (item, index) {
 				var don = a.getAt(item).kill();
@@ -884,8 +883,8 @@ var GameState = function (_Phaser$State) {
 				_this4.add.tween(don).from({ y: '-200' }, 1000, Phaser.Easing.Bounce.Out, true);
 			});
 			this.timer.destroy();
-			while (it > 0) {
-				console.log(it);
+			while (it >= 0) {
+				console.log("it" + it);
 				var str = 87.3 * arr1.length;
 				this.add.tween(a.getAt(it)).to({ y: '+' + str }, 1000, Phaser.Easing.Linear.None, true);
 				arr1.forEach(function (item, index) {
