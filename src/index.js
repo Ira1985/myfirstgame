@@ -20,6 +20,11 @@ class Game extends Phaser.Game {
 		this.timer;
 		this.count;
 		this.timer1;
+		this.set = new Set();
+		this.item;
+		this.donats1;
+		this.hoverPosX;
+		this.hoverPosY;
 	}
 
 }
