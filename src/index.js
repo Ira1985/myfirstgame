@@ -25,6 +25,8 @@ class Game extends Phaser.Game {
 		this.donats1;
 		this.hoverPosX;
 		this.hoverPosY;
+		this.up;
+		this.matches;
 	}
 
 }

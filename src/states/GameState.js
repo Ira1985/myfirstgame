@@ -23,6 +23,7 @@ class GameState extends Phaser.State {
 		this.add.sprite(0, 0, "background");
 		this.donats = this.add.group();
 		this.donats1 = [];
+		this.up = 1;
 		for(let i = 0; i < 13; i++) {
 			this.donats1.push([])
 			for(let j = 0; j < 11; j++) {
@@ -36,13 +37,22 @@ class GameState extends Phaser.State {
 					this.startPointY = Math.floor(donat.y/87.3);
 				})
 				donat.events.onInputUp.add(() => {
-					this.donats1[this.startPointX][this.startPointY] = this.donat2;
-					this.donats1[this.hoverPosX][this.hoverPosY] = this.donat1;
-				
+					this.up = 1;
 					this.startPointX = undefined;
 					this.startPointY = undefined;
+					console.log(this.getMatches(this.donats1));
 				})
 				this.donats1[i].push(donat);
+			}
+		}
+		this.matches = this.getMatches(this.donats1);
+		for(let i = 0; i < this.matches.length; i++) {
+			let arr = this.matches[i];
+			for(let j = 0; j < arr.length; j++) {
+				if(arr[j].donat) {
+					//this.donats.remove(arr[j].donat);
+					//this.donats1[arr[j].i][arr[j].j] = null;
+				}
 			}
 		}		
 	}
@@ -69,8 +79,11 @@ class GameState extends Phaser.State {
 		if(!isNaN(difX) && !isNaN(difY)) {
 			if((Math.abs(difX) == 1 && difY == 0) || (Math.abs(difY) == 1 && difX == 0)) {
 				this.donat2 = this.donats1[this.hoverPosX][this.hoverPosY];
-				this.add.tween(this.donat1).to({x: this.hoverPosX*98.5, y: this.hoverPosY*87.3}, 200, Phaser.Easing.Linear.In, true);
-				this.add.tween(this.donat2).to({x: this.startPointX*98.5, y: this.startPointY*87.3}, 200, Phaser.Easing.Linear.In, true);
+
+				if(this.up == 1) {
+					this.swap();
+					//console.log(this.getMatches(this.donats1));
+				}
 				//this.donats1[this.startPointX][this.startPointY] = this.donat2;
 				//this.donats1[this.hoverPosX][this.hoverPosY] = this.donat1;
 			}
@@ -81,6 +94,113 @@ move1() {
 	let pos2 = {x: this.donat2.x, y: this.donat2.y};
 	console.log(pos1.x, pos1.y, pos2.x, pos2.y);
 	
+}
+swap() {
+	this.up = 2;
+	this.donats1[this.startPointX][this.startPointY] = this.donat2;
+	this.donats1[this.hoverPosX][this.hoverPosY] = this.donat1;
+				
+	this.add.tween(this.donat1).to({x: this.hoverPosX*98.5, y: this.hoverPosY*87.3}, 200, Phaser.Easing.Linear.In, true);
+	this.add.tween(this.donat2).to({x: this.startPointX*98.5, y: this.startPointY*87.3}, 200, Phaser.Easing.Linear.In, true);
+
+	this.donat1 = this.donats1[this.startPointX][this.startPointY];
+	this.donat2 = this.donats1[this.hoverPosX][this.hoverPosY];
+}
+getMatches(donats) {
+	let matches = [];
+	let groups = [];
+
+	for (let j = 0; j < 11; j++) {
+		let k = j;
+		for(let i = 0; i < 13; i++) {
+			matches.push({
+				donat: donats[i][j],
+				i: i,
+				j: j
+			});
+			if(j < 9) {
+				if(donats[i][j].key === donats[i][j + 1].key && donats[i][j + 1].key == donats[i][j + 2].key) {
+					matches.push({
+						donat: donats[i][j + 1],
+						i: i,
+						j: j+1
+					});
+					matches.push({
+						donat: donats[i][j + 2],
+						i: i,
+						j: j+2
+					});
+				} else {
+					matches = [];
+					j = k;
+				}
+				if(matches.length != 0) {
+					j += 2;
+					while(j < 10) {
+						if(donats[i][j].key === donats[i][j + 1].key) {
+							matches.push({
+								donat: donats[i][j + 1],
+								i: i,
+								j: j+1
+							});
+						} else break;
+						j++;
+					}
+					groups.push(matches);
+					j = k;
+					matches = [];
+				}
+			}
+		}
+	}
+	matches = [];
+	
+	for(let i = 0; i < 11; i++) {
+		let k = i;
+		let arr = donats[i];
+		for(let j = 0; j < arr.length; j++){
+			matches.push({
+				donat: donats[i][j],
+				i: i,
+				j: j
+			});
+			if(i < 11) {
+				if(donats[i][j].key === donats[i + 1][j].key && donats[i + 1][j].key == donats[i + 2][j].key) {
+					matches.push({
+						donat: donats[i + 1][j],
+						i: i+1,
+						j: j
+					});
+					matches.push({
+						donat: donats[i + 2][j],
+						i: i+2,
+						j: j
+					});
+				} else {
+					matches = [];
+					i = k;
+				}
+				if(matches.length != 0) {
+					i += 2;
+					while(i < 12) {
+						if(donats[i][j].key === donats[i + 1][j].key) {
+							matches.push({
+								donat: donats[i + 1][j],
+								i: i + 1,
+								j: j
+							});
+						} else break;
+						i++;
+					}
+					groups.push(matches);
+					i = k;
+					matches = [];
+				}
+			}
+		}
+	 }
+	 matches = [];
+	return groups;
 }
 /*move1(a, item, index) {
 	if(a > 0) {
