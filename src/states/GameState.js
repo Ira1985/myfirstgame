@@ -1,23 +1,16 @@
-import Score from 'objects/Score';
-import Donats from 'objects/Donats';
-
 class GameState extends Phaser.State {
-    preload() {
-        const img = 'img/';
-        //this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-        //this.scale.pageAlignHorizontally = true;
-        //this.scale.pageAlignVertically = true;
-        //this.stage.backgroundColor = "#eee";
-        this.load.image('gem1', img+'gem-01.png');
-        this.load.image('gem2', img+'gem-02.png');
-        this.load.image('gem3', img+'gem-03.png');
-        this.load.image('gem4', img+'gem-04.png');
-        this.load.image('gem5', img+'gem-05.png');
-        this.load.image('gem6', img+'gem-06.png');
-        this.load.image('gem7', img+'gem-07.png');
-        this.load.image('background', img+'background.jpg');
-        
-    }
+    preload() {
+        const img = 'img/';
+        this.load.image('gem1', img+'gem-01.png');
+        this.load.image('gem2', img+'gem-02.png');
+        this.load.image('gem3', img+'gem-03.png');
+        this.load.image('gem4', img+'gem-04.png');
+        this.load.image('gem5', img+'gem-05.png');
+        this.load.image('gem6', img+'gem-06.png');
+        this.load.image('gem7', img+'gem-07.png');
+        this.load.image('background', img+'background.jpg');
+        
+    }
 
 	create() {
 		this.add.sprite(0, 0, "background");
@@ -38,38 +31,16 @@ class GameState extends Phaser.State {
 				})
 				donat.events.onInputUp.add(() => {
 					this.up = 1;
-					this.startPointX = undefined;
-					this.startPointY = undefined;
-					console.log(this.getMatches(this.donats1));
 				})
 				this.donats1[i].push(donat);
 			}
 		}
-		this.matches = this.getMatches(this.donats1);
-		for(let i = 0; i < this.matches.length; i++) {
-			let arr = this.matches[i];
-			for(let j = 0; j < arr.length; j++) {
-				if(arr[j].donat) {
-					//this.donats.remove(arr[j].donat);
-					//this.donats1[arr[j].i][arr[j].j] = null;
-				}
-			}
-		}		
+		this.game.time.events.add(5600, () => {
+			console.log('checkMatches in create');
+			this.checkMatches();
+		})		
 	}
-    update() {
-		/*this.donats.children.forEach((item, index) => {
-			this.physics.arcade.collide(item, [this.donats.children[index + 22], this.donats.children[index - 22], this.donats.children[index + 2], this.donats.children[index - 2]], function collide(donat1, donat2) {
-				donat1.body.allowGravity = false;
-				this.startPointX = undefined;
-				this.startPointY = undefined;
-			});
-		});*/
-		/*if(this.move3(this.donats).length != 0 && this.move4(this.donats).length > 2) {
-				this.timer.add(1000, this.deleteArr, this, [], this.move4(this.donats), this.donats);
-				this.timer.start();
-			}
-		this.timer.add(1000, this.deleteArr, this, this.move3(this.donats), this.move4(this.donats), this.donats);
-		this.timer.start();*/
+    update() {
 		let pointX = this.input.x;
 		let pointY = this.input.y;
 		this.hoverPosX = Math.floor(pointX/98.5);
@@ -82,19 +53,15 @@ class GameState extends Phaser.State {
 
 				if(this.up == 1) {
 					this.swap();
-					//console.log(this.getMatches(this.donats1));
+					this.game.time.events.add(500, () => {
+						console.log('checkMatches in update');
+						this.checkMatches();
+					})
 				}
-				//this.donats1[this.startPointX][this.startPointY] = this.donat2;
-				//this.donats1[this.hoverPosX][this.hoverPosY] = this.donat1;
 			}
 		}
 	}
-move1() {
-	let pos1 = {x: this.donat1.x, y: this.donat1.y};
-	let pos2 = {x: this.donat2.x, y: this.donat2.y};
-	console.log(pos1.x, pos1.y, pos2.x, pos2.y);
-	
-}
+
 swap() {
 	this.up = 2;
 	this.donats1[this.startPointX][this.startPointY] = this.donat2;
@@ -105,6 +72,22 @@ swap() {
 
 	this.donat1 = this.donats1[this.startPointX][this.startPointY];
 	this.donat2 = this.donats1[this.hoverPosX][this.hoverPosY];
+}
+updateVar() {
+	this.startPointX = undefined;
+	this.startPointY = undefined;
+}
+checkMatches() {
+	let matches = this.getMatches(this.donats1);
+	console.log(matches);
+	if(matches.length > 0) {
+		console.log('do not swap');
+		this.removeDonatGroup(matches);
+	} else {
+		console.log('do swap');
+		this.swap();
+	}
+	this.updateVar();
 }
 getMatches(donats) {
 	let matches = [];
@@ -119,41 +102,44 @@ getMatches(donats) {
 				j: j
 			});
 			if(j < 9) {
-				if(donats[i][j].key === donats[i][j + 1].key && donats[i][j + 1].key == donats[i][j + 2].key) {
-					matches.push({
-						donat: donats[i][j + 1],
-						i: i,
-						j: j+1
-					});
-					matches.push({
-						donat: donats[i][j + 2],
-						i: i,
-						j: j+2
-					});
-				} else {
-					matches = [];
-					j = k;
-				}
-				if(matches.length != 0) {
-					j += 2;
-					while(j < 10) {
-						if(donats[i][j].key === donats[i][j + 1].key) {
-							matches.push({
-								donat: donats[i][j + 1],
-								i: i,
-								j: j+1
-							});
-						} else break;
-						j++;
+				if(donats[i][j] && donats[i][j + 1] && donats[i][j + 2]) {
+					if(donats[i][j].key === donats[i][j + 1].key && donats[i][j + 1].key == donats[i][j + 2].key) {
+						matches.push({
+							donat: donats[i][j + 1],
+							i: i,
+							j: j+1
+						});
+						matches.push({
+							donat: donats[i][j + 2],
+							i: i,
+							j: j+2
+						});
+					} else {
+						matches = [];
+						j = k;
 					}
-					groups.push(matches);
-					j = k;
-					matches = [];
+					if(matches.length != 0) {
+						j += 2;
+						while(j < 10) {
+							if(donats[i][j].key === donats[i][j + 1].key) {
+								matches.push({
+									donat: donats[i][j + 1],
+									i: i,
+									j: j+1
+								});
+							} else break;
+							j++;
+						}
+						groups.push(matches);
+						j = k;
+						matches = [];
+					}
 				}
 			}
 		}
 	}
 	matches = [];
+	console.log(matches);
 	
 	for(let i = 0; i < 11; i++) {
 		let k = i;
@@ -165,36 +151,38 @@ getMatches(donats) {
 				j: j
 			});
 			if(i < 11) {
-				if(donats[i][j].key === donats[i + 1][j].key && donats[i + 1][j].key == donats[i + 2][j].key) {
-					matches.push({
-						donat: donats[i + 1][j],
-						i: i+1,
-						j: j
-					});
-					matches.push({
-						donat: donats[i + 2][j],
-						i: i+2,
-						j: j
-					});
-				} else {
-					matches = [];
-					i = k;
-				}
-				if(matches.length != 0) {
-					i += 2;
-					while(i < 12) {
-						if(donats[i][j].key === donats[i + 1][j].key) {
-							matches.push({
-								donat: donats[i + 1][j],
-								i: i + 1,
-								j: j
-							});
-						} else break;
-						i++;
+				if(donats[i][j] && donats[i + 1][j] && donats[i + 2][j]) {
+					if(donats[i][j].key === donats[i + 1][j].key && donats[i + 1][j].key == donats[i + 2][j].key) {
+						matches.push({
+							donat: donats[i + 1][j],
+							i: i+1,
+							j: j
+						});
+						matches.push({
+							donat: donats[i + 2][j],
+							i: i+2,
+							j: j
+						});
+					} else {
+						matches = [];
+						i = k;
 					}
-					groups.push(matches);
-					i = k;
-					matches = [];
+					if(matches.length != 0) {
+						i += 2;
+						while(i < 12) {
+							if(donats[i][j].key === donats[i + 1][j].key) {
+								matches.push({
+									donat: donats[i + 1][j],
+									i: i + 1,
+									j: j
+								});
+							} else break;
+							i++;
+						}
+						groups.push(matches);
+						i = k;
+						matches = [];
+					}
 				}
 			}
 		}
@@ -202,167 +190,15 @@ getMatches(donats) {
 	 matches = [];
 	return groups;
 }
-/*move1(a, item, index) {
-	if(a > 0) {
-		this.add.tween(item).to( { x: '-98.5'}, 1000, Phaser.Easing.Linear.None, true);
-		this.add.tween(this.donats.children[index - 1]).to( { x: '+98.5'}, 1000, Phaser.Easing.Linear.None, true);
-		let donat1 = this.donats.getAt(index);
-		let donat2 = this.donats.getAt(index - 1);
-		this.donats.swap(donat1, donat2);
-		this.input.moveCallbacks = [];
-
-	}
-	if(a < 0) {
-		this.add.tween(this.donats.getAt(index)).to( { x: '+98.5'}, 1000, Phaser.Easing.Linear.None, true);
-		this.add.tween(this.donats.getAt(index + 1)).to( { x: '-98.5'}, 1000, Phaser.Easing.Linear.None, true);
-		let donat1 = this.donats.getAt(index);
-		let donat2 = this.donats.getAt(index + 1);
-		this.donats.swap(donat1, donat2);
-		this.input.moveCallbacks = [];
-
-	}
-}*/
-move2(a, item, index) {
-	if(a > 0) {
-		this.add.tween(item).to( { y: '-87.3'}, 1000, Phaser.Easing.Linear.None, true);
-		this.add.tween(this.donats.children[index - 13]).to( { y: '+87.3'}, 1000, Phaser.Easing.Linear.None, true);
-		let donat1 = this.donats.getAt(index);
-		let donat2 = this.donats.getAt(index - 13);
-		this.donats.swap(donat1, donat2);
-		this.input.moveCallbacks = [];
-
-	}
-	if(a < 0) {
-		this.add.tween(item).to( { y: '+87.3'}, 1000, Phaser.Easing.Linear.None, true);
-		this.add.tween(this.donats.children[index + 13]).to( { y: '-87.3'}, 1000, Phaser.Easing.Linear.None, true);
-		let donat1 = this.donats.getAt(index);
-		let donat2 = this.donats.getAt(index + 13);
-		this.donats.swap(donat1, donat2);
-		this.input.moveCallbacks = [];
-
-	}
-
-}
-move3(a) {
-	let first1;
-	let arr1 = [];
-	for(let i = 0; i < 13; i++) {
-		first1 = a.getAt(i);
-		let j = i + 13;
-		arr1.push(i);
-		while(j < a.length + 13) {
-			if(first1.key == a.getAt(j).key) {
-				arr1.push(j);
-			} else {
-				if(arr1.length > 2) {
-					return arr1;
-				}
-				first1 = a.getAt(j);
-				arr1 = [];
-				arr1.push(j);
-			}
-			j += 13;
-		}
-		arr1 = [];
-	}
-	return arr1;
-}
-deleteArr(arr1, arr, a) {
-	this.input.disabled = false;
-	let it = arr1[0] - 13;
-	arr1.forEach((item, index) => {
-		let don = a.getAt(item).kill();
-		don.loadTexture('gem' + this.rnd.integerInRange(1, 7));
-		don.visible = true;
-		don.x = this.donats.getAt(item).x;
-		don.y = 0 + index * 87.3;
-		this.add.tween(don).from( { y: '-200'}, 1000, Phaser.Easing.Bounce.Out, true);
-	});
-	this.timer.destroy();
-	while (it >= 0) {
-		console.log("it" + it);
-		let str = 87.3 * arr1.length;
-		this.add.tween(a.getAt(it)).to({y: '+' + str}, 1000, Phaser.Easing.Linear.None, true);
-		arr1.forEach((item, index) => {
-			a.swap(a.getAt(it + 13 * index), a.getAt(item));
-			arr1.splice(index, 1, item - 13);
-		})
-		//this.donats.swap(this.donats.getAt(it), this.donats.getAt(it1));
-		it -= 13;
-	}
-	this.count++;
-	if(this.count > 1) {
-		this.timer.destroy();
-		this.count = 0;
-	}
-    
-    
-
-	if(arr.length < 3) {
-		arr = [];
-	}
-	arr.forEach(item => {
-		a.getAt(item).kill();
-		while(item > 12) {
-			let next =a.getAt(item - 13);
-			this.add.tween(a.getAt(item - 13)).to( { y: '+87.3'}, 1000, Phaser.Easing.Linear.None, true);
-			let item1 = a.getAt(item);
-			item1.x = a.getAt(item).x;
-			item1.y = 0;
-			this.add.tween(item1).from( { y: '-200'}, 1000, Phaser.Easing.Bounce.Out, true);
-			a.swap(a.getAt(item), next);
-			item -= 13;
-		}
-
-		a.getAt(item).loadTexture('gem' + this.rnd.integerInRange(1, 7));
-		a.getAt(item).visible = true;
-		this.timer.destroy();
-	});
-}
-move4(a) {
-	let first;
-	let count = 0;
-	let arr = [];
-	for(let i = 0; i < a.length; i++) {
-		if(i%13 == 0 || first.key != a.getAt(i).key) {
-			first = a.getAt(i);
-			if(count > 1) {
-				return arr;
-			}
-			count = 0;
-			arr = [];
-			arr.push(i);
-			continue;
-		} else {
-			count++;
-			arr.push(i);
+removeDonatGroup(donats) {
+	for(let i = 0; i < donats.length; i++) {
+		let arr = donats[i];
+		for(let j = 0; j < arr.length; j++) {
+			this.donats.remove(arr[j].donat);
+			this.donats1[arr[j].i][arr[j].j] = null;
 		}
 	}
-	return arr;
 }
-/*deleteArr1(arr, a) {
-	if(arr.length < 3) {
-		arr = [];
-	}
-	arr.forEach(item => {
-		a.getAt(item).kill();
-		while(item > 12) {
-			let next =a.getAt(item - 13);
-			this.add.tween(a.getAt(item - 13)).to( { y: '+87.3'}, 1000, Phaser.Easing.Linear.None, true);
-			let item1 = a.getAt(item);
-			item1.x = a.getAt(item).x;
-			item1.y = 0;
-			this.add.tween(item1).from( { y: '-200'}, 1000, Phaser.Easing.Bounce.Out, true);
-			a.swap(a.getAt(item), next);
-			item -= 13;
-		}
-
-		a.getAt(item).loadTexture('gem' + this.rnd.integerInRange(1, 7));
-		a.getAt(item).visible = true;
-		this.timer.destroy();
-	});
-	//this.input.moveCallbacks = [];
-}*/
 
 }
 
