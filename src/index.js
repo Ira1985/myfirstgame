@@ -27,6 +27,7 @@ class Game extends Phaser.Game {
 		this.hoverPosY;
 		this.up;
 		this.matches;
+		this.canMove;
 	}
 
 }

@@ -16,7 +16,7 @@ class GameState extends Phaser.State {
 		this.add.sprite(0, 0, "background");
 		this.donats = this.add.group();
 		this.donats1 = [];
-		this.up = 1;
+		this.canMove = false;
 		for(let i = 0; i < 13; i++) {
 			this.donats1.push([])
 			for(let j = 0; j < 11; j++) {
@@ -30,13 +30,12 @@ class GameState extends Phaser.State {
 					this.startPointY = Math.floor(donat.y/87.3);
 				})
 				donat.events.onInputUp.add(() => {
-					this.up = 1;
+					this.canMove = true;
 				})
 				this.donats1[i].push(donat);
 			}
 		}
-		this.game.time.events.add(5600, () => {
-			console.log('checkMatches in create');
+		this.game.time.events.add(600, () => {
 			this.checkMatches();
 		})		
 	}
@@ -47,14 +46,14 @@ class GameState extends Phaser.State {
 		this.hoverPosY = Math.floor(pointY/87.3);
 		let difX = this.hoverPosX - this.startPointX;
 		let difY = this.hoverPosY - this.startPointY;
+		
 		if(!isNaN(difX) && !isNaN(difY)) {
 			if((Math.abs(difX) == 1 && difY == 0) || (Math.abs(difY) == 1 && difX == 0)) {
 				this.donat2 = this.donats1[this.hoverPosX][this.hoverPosY];
-
-				if(this.up == 1) {
+				if(this.canMove) {
 					this.swap();
 					this.game.time.events.add(500, () => {
-						console.log('checkMatches in update');
+						
 						this.checkMatches();
 					})
 				}
@@ -63,31 +62,76 @@ class GameState extends Phaser.State {
 	}
 
 swap() {
-	this.up = 2;
+	this.canMove = false;
+	console.log(this.startPointX, this.startPointY, this.hoverPosX, this.hoverPosY)
 	this.donats1[this.startPointX][this.startPointY] = this.donat2;
+	
 	this.donats1[this.hoverPosX][this.hoverPosY] = this.donat1;
-				
 	this.add.tween(this.donat1).to({x: this.hoverPosX*98.5, y: this.hoverPosY*87.3}, 200, Phaser.Easing.Linear.In, true);
 	this.add.tween(this.donat2).to({x: this.startPointX*98.5, y: this.startPointY*87.3}, 200, Phaser.Easing.Linear.In, true);
-
+	
 	this.donat1 = this.donats1[this.startPointX][this.startPointY];
 	this.donat2 = this.donats1[this.hoverPosX][this.hoverPosY];
 }
 updateVar() {
-	this.startPointX = undefined;
-	this.startPointY = undefined;
+	this.donat1 = null;
+	this.donat2 = null;
 }
 checkMatches() {
 	let matches = this.getMatches(this.donats1);
-	console.log(matches);
 	if(matches.length > 0) {
-		console.log('do not swap');
 		this.removeDonatGroup(matches);
+		this.resetDonat();
+		this.fillNull();
+		this.updateVar();
+		this.game.time.events.add(600, () => {
+			this.checkMatches();
+		})		
 	} else {
-		console.log('do swap');
-		this.swap();
+		if(this.startPointX && this.startPointY){
+			this.swap();
+		}
+		this.updateVar()
 	}
-	this.updateVar();
+	
+}
+fillNull() {
+	for(let i = 0; i < 13; i++) {
+		for (let j = 0; j < 11; j++) {
+			let donat;
+			if(this.donats1[i][j] == null) {
+				donat = this.donats.create(i*98.5, 0, 'gem' + this.rnd.integerInRange(1, 7));
+				this.add.tween(donat).to({y: j*87.3}, 500, Phaser.Easing.Linear.In, true);
+				donat.scale.setTo(0.9, 0.9);
+				donat.inputEnabled = true;
+				donat.events.onInputDown.add((donat) => {
+					this.donat1 = donat;
+					this.startPointX = Math.floor(donat.x/98.5);
+					this.startPointY = Math.floor(donat.y/87.3);
+				})
+				donat.events.onInputUp.add(() => {
+					this.canMove = true;
+				})
+				this.donats1[i][j] = donat;
+			}
+			
+		}
+	}
+}
+resetDonat() {
+	for(let i = 0; i < 13; i++) {
+		for(let j = this.donats1[i].length - 1; j > 0; j--) {
+			if(this.donats1[i][j] == null && this.donats1[i][j - 1] != null) {
+				let don = this.donats1[i][j - 1];
+				this.donats1[i][j] = don;
+				this.donats1[i][j - 1] = null;
+
+				this.add.tween(don).to({y: 87.3*j}, 200, Phaser.Easing.Linear.In, true);
+				j = this.donats1[i].length;
+
+			} 
+		}
+	}
 }
 getMatches(donats) {
 	let matches = [];
@@ -139,7 +183,6 @@ getMatches(donats) {
 		}
 	}
 	matches = [];
-	console.log(matches);
 	
 	for(let i = 0; i < 11; i++) {
 		let k = i;
