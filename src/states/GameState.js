@@ -63,7 +63,7 @@ class GameState extends Phaser.State {
 
 swap() {
 	this.canMove = false;
-	console.log(this.startPointX, this.startPointY, this.hoverPosX, this.hoverPosY)
+	console.log("aaaaaaaaaaa")
 	this.donats1[this.startPointX][this.startPointY] = this.donat2;
 	
 	this.donats1[this.hoverPosX][this.hoverPosY] = this.donat1;
@@ -76,6 +76,8 @@ swap() {
 updateVar() {
 	this.donat1 = null;
 	this.donat2 = null;
+	this.startPointX = undefined;
+	this.startPointY = undefined;
 }
 checkMatches() {
 	let matches = this.getMatches(this.donats1);
@@ -84,6 +86,7 @@ checkMatches() {
 		this.resetDonat();
 		this.fillNull();
 		this.updateVar();
+		console.log("aaaaaaaaaaa", this.startPointX, this.startPointY)
 		this.game.time.events.add(600, () => {
 			this.checkMatches();
 		})		
