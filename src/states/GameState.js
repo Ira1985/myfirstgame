@@ -119,7 +119,7 @@ fillNull() {
 				donat.inputEnabled = true;
 				donat.events.onInputDown.add((donat) => {
 					this.canMove = true;
-					console.log('create onInputDown', donat.inputEnabled)
+					console.log('new onInputDown', donat.inputEnabled)
 					this.donat1 = donat;
 					this.startPointX = Math.floor(donat.x/98.5);
 					this.startPointY = Math.floor(donat.y/87.3);
@@ -129,7 +129,7 @@ fillNull() {
 					if(this.donat2 == null) {
 						this.updateVar();
 					}
-					console.log('create onInputUp', this.canMove, this.donat2, this.startPointX, this.startPointY)
+					console.log('new onInputUp', this.canMove, this.donat2, this.startPointX, this.startPointY)
 				})
 				this.donats1[i][j] = donat;
 			}
