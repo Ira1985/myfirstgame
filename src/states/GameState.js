@@ -25,12 +25,18 @@ class GameState extends Phaser.State {
 				donat.scale.setTo(0.9, 0.9);
 				donat.inputEnabled = true;
 				donat.events.onInputDown.add((donat) => {
+					this.canMove = true;
+					console.log('create onInputDown', donat.inputEnabled)
 					this.donat1 = donat;
 					this.startPointX = Math.floor(donat.x/98.5);
 					this.startPointY = Math.floor(donat.y/87.3);
 				})
 				donat.events.onInputUp.add(() => {
-					this.canMove = true;
+					this.canMove = false;
+					if(this.donat2 == null) {
+						this.updateVar();
+					}
+					console.log('create onInputUp', this.canMove, this.donat2, this.startPointX, this.startPointY)
 				})
 				this.donats1[i].push(donat);
 			}
@@ -51,9 +57,9 @@ class GameState extends Phaser.State {
 			if((Math.abs(difX) == 1 && difY == 0) || (Math.abs(difY) == 1 && difX == 0)) {
 				this.donat2 = this.donats1[this.hoverPosX][this.hoverPosY];
 				if(this.canMove) {
+					console.log('update', this.canMove, this.donat2.events.onInputDown)
 					this.swap();
 					this.game.time.events.add(500, () => {
-						
 						this.checkMatches();
 					})
 				}
@@ -62,16 +68,18 @@ class GameState extends Phaser.State {
 	}
 
 swap() {
-	this.canMove = false;
-	console.log("aaaaaaaaaaa")
-	this.donats1[this.startPointX][this.startPointY] = this.donat2;
-	
-	this.donats1[this.hoverPosX][this.hoverPosY] = this.donat1;
-	this.add.tween(this.donat1).to({x: this.hoverPosX*98.5, y: this.hoverPosY*87.3}, 200, Phaser.Easing.Linear.In, true);
-	this.add.tween(this.donat2).to({x: this.startPointX*98.5, y: this.startPointY*87.3}, 200, Phaser.Easing.Linear.In, true);
-	
-	this.donat1 = this.donats1[this.startPointX][this.startPointY];
-	this.donat2 = this.donats1[this.hoverPosX][this.hoverPosY];
+	if(this.donat1 && this.donat2) {
+		this.canMove = false;
+		this.donats1[this.startPointX][this.startPointY] = this.donat2;
+		
+		this.donats1[this.hoverPosX][this.hoverPosY] = this.donat1;
+		this.add.tween(this.donat1).to({x: this.hoverPosX*98.5, y: this.hoverPosY*87.3}, 200, Phaser.Easing.Linear.In, true);
+		this.add.tween(this.donat2).to({x: this.startPointX*98.5, y: this.startPointY*87.3}, 200, Phaser.Easing.Linear.In, true);
+		
+		this.donat1 = this.donats1[this.startPointX][this.startPointY];
+		this.donat2 = this.donats1[this.hoverPosX][this.hoverPosY];
+		console.log("swap", this.canMove, this.donat2)
+	}
 }
 updateVar() {
 	this.donat1 = null;
@@ -80,18 +88,21 @@ updateVar() {
 	this.startPointY = undefined;
 }
 checkMatches() {
+	this.canMove = false;
 	let matches = this.getMatches(this.donats1);
 	if(matches.length > 0) {
+		this.updateVar();
 		this.removeDonatGroup(matches);
 		this.resetDonat();
 		this.fillNull();
-		this.updateVar();
-		console.log("aaaaaaaaaaa", this.startPointX, this.startPointY)
+		console.log("checkMatches", this.canMove, this.donat2)
 		this.game.time.events.add(600, () => {
 			this.checkMatches();
 		})		
 	} else {
 		if(this.startPointX && this.startPointY){
+			this.canMove = true;
+			console.log("checkMatches111", this.canMove, this.donat2)
 			this.swap();
 		}
 		this.updateVar()
@@ -101,19 +112,24 @@ checkMatches() {
 fillNull() {
 	for(let i = 0; i < 13; i++) {
 		for (let j = 0; j < 11; j++) {
-			let donat;
 			if(this.donats1[i][j] == null) {
-				donat = this.donats.create(i*98.5, 0, 'gem' + this.rnd.integerInRange(1, 7));
+				let donat = this.donats.create(i*98.5, 0, 'gem' + this.rnd.integerInRange(1, 7));
 				this.add.tween(donat).to({y: j*87.3}, 500, Phaser.Easing.Linear.In, true);
 				donat.scale.setTo(0.9, 0.9);
 				donat.inputEnabled = true;
 				donat.events.onInputDown.add((donat) => {
+					this.canMove = true;
+					console.log('create onInputDown', donat.inputEnabled)
 					this.donat1 = donat;
 					this.startPointX = Math.floor(donat.x/98.5);
 					this.startPointY = Math.floor(donat.y/87.3);
 				})
 				donat.events.onInputUp.add(() => {
-					this.canMove = true;
+					this.canMove = false;
+					if(this.donat2 == null) {
+						this.updateVar();
+					}
+					console.log('create onInputUp', this.canMove, this.donat2, this.startPointX, this.startPointY)
 				})
 				this.donats1[i][j] = donat;
 			}
