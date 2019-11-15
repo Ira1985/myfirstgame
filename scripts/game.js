@@ -141,12 +141,18 @@ var GameState = function (_Phaser$State) {
 					donat.scale.setTo(0.9, 0.9);
 					donat.inputEnabled = true;
 					donat.events.onInputDown.add(function (donat) {
+						_this2.canMove = true;
+						console.log('create onInputDown', donat.inputEnabled);
 						_this2.donat1 = donat;
 						_this2.startPointX = Math.floor(donat.x / 98.5);
 						_this2.startPointY = Math.floor(donat.y / 87.3);
 					});
 					donat.events.onInputUp.add(function () {
-						_this2.canMove = true;
+						_this2.canMove = false;
+						if (_this2.donat2 == null) {
+							_this2.updateVar();
+						}
+						console.log('create onInputUp', _this2.canMove, _this2.donat2, _this2.startPointX, _this2.startPointY);
 					});
 					this.donats1[i].push(donat);
 				}
@@ -171,9 +177,9 @@ var GameState = function (_Phaser$State) {
 				if (Math.abs(difX) == 1 && difY == 0 || Math.abs(difY) == 1 && difX == 0) {
 					this.donat2 = this.donats1[this.hoverPosX][this.hoverPosY];
 					if (this.canMove) {
+						console.log('update', this.canMove, this.donat2.events.onInputDown);
 						this.swap();
 						this.game.time.events.add(500, function () {
-
 							_this3.checkMatches();
 						});
 					}
@@ -183,16 +189,18 @@ var GameState = function (_Phaser$State) {
 	}, {
 		key: 'swap',
 		value: function swap() {
-			this.canMove = false;
-			console.log("aaaaaaaaaaa");
-			this.donats1[this.startPointX][this.startPointY] = this.donat2;
+			if (this.donat1 && this.donat2) {
+				this.canMove = false;
+				this.donats1[this.startPointX][this.startPointY] = this.donat2;
 
-			this.donats1[this.hoverPosX][this.hoverPosY] = this.donat1;
-			this.add.tween(this.donat1).to({ x: this.hoverPosX * 98.5, y: this.hoverPosY * 87.3 }, 200, Phaser.Easing.Linear.In, true);
-			this.add.tween(this.donat2).to({ x: this.startPointX * 98.5, y: this.startPointY * 87.3 }, 200, Phaser.Easing.Linear.In, true);
+				this.donats1[this.hoverPosX][this.hoverPosY] = this.donat1;
+				this.add.tween(this.donat1).to({ x: this.hoverPosX * 98.5, y: this.hoverPosY * 87.3 }, 200, Phaser.Easing.Linear.In, true);
+				this.add.tween(this.donat2).to({ x: this.startPointX * 98.5, y: this.startPointY * 87.3 }, 200, Phaser.Easing.Linear.In, true);
 
-			this.donat1 = this.donats1[this.startPointX][this.startPointY];
-			this.donat2 = this.donats1[this.hoverPosX][this.hoverPosY];
+				this.donat1 = this.donats1[this.startPointX][this.startPointY];
+				this.donat2 = this.donats1[this.hoverPosX][this.hoverPosY];
+				console.log("swap", this.canMove, this.donat2);
+			}
 		}
 	}, {
 		key: 'updateVar',
@@ -207,18 +215,21 @@ var GameState = function (_Phaser$State) {
 		value: function checkMatches() {
 			var _this4 = this;
 
+			this.canMove = false;
 			var matches = this.getMatches(this.donats1);
 			if (matches.length > 0) {
+				this.updateVar();
 				this.removeDonatGroup(matches);
 				this.resetDonat();
 				this.fillNull();
-				this.updateVar();
-				console.log("aaaaaaaaaaa", this.startPointX, this.startPointY);
+				console.log("checkMatches", this.canMove, this.donat2);
 				this.game.time.events.add(600, function () {
 					_this4.checkMatches();
 				});
 			} else {
 				if (this.startPointX && this.startPointY) {
+					this.canMove = true;
+					console.log("checkMatches111", this.canMove, this.donat2);
 					this.swap();
 				}
 				this.updateVar();
@@ -231,19 +242,24 @@ var GameState = function (_Phaser$State) {
 
 			for (var i = 0; i < 13; i++) {
 				for (var j = 0; j < 11; j++) {
-					var donat = void 0;
 					if (this.donats1[i][j] == null) {
-						donat = this.donats.create(i * 98.5, 0, 'gem' + this.rnd.integerInRange(1, 7));
+						var donat = this.donats.create(i * 98.5, 0, 'gem' + this.rnd.integerInRange(1, 7));
 						this.add.tween(donat).to({ y: j * 87.3 }, 500, Phaser.Easing.Linear.In, true);
 						donat.scale.setTo(0.9, 0.9);
 						donat.inputEnabled = true;
 						donat.events.onInputDown.add(function (donat) {
+							_this5.canMove = true;
+							console.log('create onInputDown', donat.inputEnabled);
 							_this5.donat1 = donat;
 							_this5.startPointX = Math.floor(donat.x / 98.5);
 							_this5.startPointY = Math.floor(donat.y / 87.3);
 						});
 						donat.events.onInputUp.add(function () {
-							_this5.canMove = true;
+							_this5.canMove = false;
+							if (_this5.donat2 == null) {
+								_this5.updateVar();
+							}
+							console.log('create onInputUp', _this5.canMove, _this5.donat2, _this5.startPointX, _this5.startPointY);
 						});
 						this.donats1[i][j] = donat;
 					}
